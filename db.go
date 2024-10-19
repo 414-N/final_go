@@ -54,7 +54,7 @@ func getAllTasks() ([]Task, error) {
 
 	var tasks []Task
 
-	err := dbx.Select(&tasks, "SELECT * FROM scheduler ORDER BY date ASC LIMIT HUNDRED")
+	err := dbx.Select(&tasks, "SELECT * FROM scheduler ORDER BY date ASC LIMIT")
 	if err != nil {
 		return nil, err
 	}

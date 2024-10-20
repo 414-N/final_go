@@ -10,6 +10,7 @@ import (
 )
 
 var db *sql.DB
+var dbx *sqlx.DB
 
 func initDb() {
 	dbFile := getDbFilePath()

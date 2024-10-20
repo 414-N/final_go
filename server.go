@@ -118,7 +118,7 @@ func setErrorResponse(w http.ResponseWriter, s string, err error) {
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(jsonResponse)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 }
@@ -180,7 +180,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 		setErrorResponse(w, "failed to convert id to int", err)
 		return
 	}
-	err = deleteTaskById(int(id))
+	err = db.deleteTaskById(int(id))
 	if err != nil {
 		setErrorResponse(w, "failed to delete task with id = "+strconv.Itoa(int(id)), err)
 		return
@@ -193,10 +193,6 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonResponse)

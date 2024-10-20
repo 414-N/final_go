@@ -10,7 +10,6 @@ import (
 )
 
 var db *sql.DB
-var dbx *sqlx.DB
 
 func initDb() {
 	dbFile := getDbFilePath()
@@ -36,7 +35,8 @@ func initDb() {
 }
 
 func getDbFilePath() string {
-	return "scheduler.db"
+	const dbFilePath = "scheduler.db"
+	return dbFilePath
 }
 
 func installDb(db *sql.DB) {
@@ -54,7 +54,7 @@ func getAllTasks() ([]Task, error) {
 
 	var tasks []Task
 
-	err := dbx.Select(&tasks, "SELECT * FROM scheduler ORDER BY date ASC LIMIT")
+	err := dbx.Select(&tasks, "SELECT id, date, title, comment, repeat FROM scheduler ORDER BY date ASC LIMIT ?", Limit)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func loadTaskById(id int64) (*Task, error) {
 
 	var task Task
 
-	err := dbx.Get(&task, "SELECT * FROM scheduler where id = ?", id)
+	err := dbx.Get(&task, "SELECT id, date, title, comment, repeat FROM scheduler where id = ?", id)
 	if err != nil {
 		return nil, err
 	}
